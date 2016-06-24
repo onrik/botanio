@@ -12,8 +12,12 @@ import (
 
 func main() {
 	botan := botanio.New("<token>")
-
 	answer, err := botan.Track(123456, "search", botanio.Map{
+		"query": "cartoon",
+	})
+	
+	// Track without client creating
+	answer, err := botanio.Track("<token>", 123456, "search", botanio.Map{
 		"query": "cartoon",
 	})
 }
