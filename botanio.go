@@ -32,13 +32,18 @@ func New(token string) *Botan {
 
 // Track action
 func (botan *Botan) Track(userId int, name string, message interface{}) (*Answer, error) {
+	return Track(botan.Token, userId, name, message)
+}
+
+// Track action
+func Track(token string, userId int, name string, message interface{}) (*Answer, error) {
 	body := new(bytes.Buffer)
 	if err := json.NewEncoder(body).Encode(message); err != nil {
 		return nil, err
 	}
 
 	values := url.Values{
-		"token": {botan.Token},
+		"token": {token},
 		"name":  {name},
 		"uid":   {strconv.Itoa(userId)},
 	}
