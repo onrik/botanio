@@ -15,11 +15,14 @@ func main() {
 	answer, err := botan.Track(123456, "search", botanio.Map{
 		"query": "cartoon",
 	})
+	url, err := botan.Short(123456, "https://google.com")
 	
-	// Track without client creating
-	answer, err := botanio.Track("<token>", 123456, "search", botanio.Map{
+	// Usage without client creating
+	botanio.SetToken("<token>")
+	answer, err := botanio.Track(123456, "search", botanio.Map{
 		"query": "cartoon",
 	})
+	url, err := botanio.Short(123456, "https://google.com")
 }
 
 ```
