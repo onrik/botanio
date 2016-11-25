@@ -75,6 +75,10 @@ func track(token string, userID int, name string, message interface{}) (*Answer,
 
 	url := fmt.Sprintf("%s?%s", TRACK_URL, values.Encode())
 	response, err := http.Post(url, "application/json", body)
+	if response != nil {
+		defer response.Body.Close()
+	}
+
 	if err != nil {
 		return nil, err
 	}
@@ -83,9 +87,13 @@ func track(token string, userID int, name string, message interface{}) (*Answer,
 		return nil, fmt.Errorf("Status: %d", response.StatusCode)
 	}
 
-	defer response.Body.Close()
+	data, err := ioutil.ReadAll(response.Body)
+	if err != nil {
+		return nil, err
+	}
+
 	answer := new(Answer)
-	if err := json.NewDecoder(response.Body).Decode(answer); err != nil {
+	if err := json.Unmarshal(data, answer); err != nil {
 		return nil, err
 	} else {
 		return answer, nil
@@ -100,6 +108,10 @@ func short(token string, userID int, u string) (string, error) {
 	}
 
 	response, err := http.Get(fmt.Sprintf("%s?%s", SHORTENER_URL, values.Encode()))
+	if response != nil {
+		defer response.Body.Close()
+	}
+
 	if err != nil {
 		return "", err
 	}
@@ -108,9 +120,7 @@ func short(token string, userID int, u string) (string, error) {
 		return "", fmt.Errorf("Status: %d", response.StatusCode)
 	}
 
-	defer response.Body.Close()
-	data, err := ioutil.ReadAll(response.Body)
-	if err != nil {
+	if data, err := ioutil.ReadAll(response.Body); err != nil {
 		return "", err
 	} else {
 		return string(data), nil
